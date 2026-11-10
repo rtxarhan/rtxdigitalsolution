@@ -61,6 +61,54 @@ export default function Contact() {
 
   return (
     <section id="contact" className="px-4 py-16 md:px-8 md:py-24">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="relative isolate mx-auto mb-10 max-w-6xl overflow-hidden rounded-[2rem] bg-primary px-6 py-12 text-center text-primary-foreground sm:px-10 md:py-16"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-16 -top-16 -z-10 size-64 rounded-full bg-white/15 blur-2xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-20 -right-10 -z-10 size-72 rounded-full bg-black/10 blur-2xl"
+        />
+        <h2 className="mx-auto max-w-2xl font-display text-3xl font-bold leading-tight tracking-tight text-balance sm:text-5xl">
+          Ready to get more customers online?
+        </h2>
+        <p className="mx-auto max-w-xl pt-4 text-primary-foreground/85 sm:text-lg">
+          Let’s turn your business into a website people love to visit. Starts at just 50% advance.
+        </p>
+        <div className="flex flex-col items-center justify-center gap-3 pt-8 sm:flex-row">
+          <Button
+            size="lg"
+            render={
+              <a
+                href={whatsappLink("Hi Rtx Dev, I want to get my business online.")}
+                target="_blank"
+                rel="noreferrer"
+              />
+            }
+            nativeButton={false}
+            className="w-full cursor-pointer rounded-full bg-background px-7 text-foreground hover:bg-background/90 sm:w-auto"
+          >
+            <MessageCircle aria-hidden="true" /> Chat on WhatsApp
+          </Button>
+          <Button
+            size="lg"
+            variant="ghost"
+            render={<a href="#pricing" />}
+            nativeButton={false}
+            className="w-full cursor-pointer rounded-full border border-primary-foreground/40 px-7 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground sm:w-auto"
+          >
+            View Pricing
+          </Button>
+        </div>
+      </motion.div>
+
       <div className="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-foreground text-background shadow-2xl">
         <div
           aria-hidden="true"
@@ -77,7 +125,7 @@ export default function Contact() {
               06 — Let’s talk
             </p>
             <h2 className="pt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance sm:text-5xl">
-              Your customers are <span className="text-primary">waiting.</span>
+              Let’s build something <span className="text-primary">great.</span>
             </h2>
             <p className="max-w-md pt-5 leading-relaxed text-background/70">
               Tell me what you’re building. I’ll help you find the right way to bring it online.
@@ -126,6 +174,7 @@ export default function Contact() {
             noValidate
             className="rounded-3xl bg-background p-5 text-foreground sm:p-7"
           >
+            <p className="pb-5 font-display text-xl font-bold">Send a message</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="contact-name">Your name</Label>

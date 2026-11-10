@@ -142,7 +142,8 @@ export default function Pricing() {
               </div>
 
               <Button
-                className="mt-7 w-full cursor-pointer"
+                variant={plan.popular ? "default" : "secondary"}
+                className="mt-7 w-full cursor-pointer rounded-full"
                 render={
                   <a
                     href={whatsappLink(`Hi Rtx Dev, I want the ${plan.name} plan (${formatInr(plan.price)}).`)}
@@ -165,21 +166,24 @@ export default function Pricing() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="rounded-2xl border border-border bg-card p-6 sm:p-8"
+            className="rounded-2xl bg-foreground p-6 text-background sm:p-8"
           >
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-              Included every month
+              After launch
             </p>
-            <h3 className="pt-3 font-display text-2xl font-bold">Monthly care plan includes</h3>
+            <h3 className="pt-3 font-display text-2xl font-bold">Website Care Plan</h3>
+            <p className="pt-2 text-sm text-background/70">
+              Starts at <span className="font-display text-lg font-bold text-primary">{formatInr(PLANS[0].monthly)}/month</span>. Cancel anytime.
+            </p>
             <ul className="grid gap-4 pt-6 sm:grid-cols-2">
               {MONTHLY_INCLUDES.map((item, index) => {
                 const Icon = careIcons[index % careIcons.length];
                 return (
                   <li key={item} className="flex items-start gap-3 text-sm leading-relaxed">
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent text-primary">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
                       <Icon className="size-4" aria-hidden="true" />
                     </span>
-                    <span className="pt-1">{item}</span>
+                    <span className="pt-1 text-background/85">{item}</span>
                   </li>
                 );
               })}

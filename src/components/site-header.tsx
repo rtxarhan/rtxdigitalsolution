@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowUpRight, Menu } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 
 import ThemeToggle from "@/components/theme-toggle.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -57,30 +58,56 @@ export default function SiteHeader() {
             >
               <Menu aria-hidden="true" />
             </SheetTrigger>
-            <SheetContent side="right" className="gap-0 rounded-l-3xl border-border bg-card p-5">
-              <SheetHeader className="px-0 pb-6">
-                <SheetTitle className="font-display text-2xl">Rtx Dev</SheetTitle>
-                <SheetDescription>Explore the services, work, and process.</SheetDescription>
+            {/* Fullscreen dark menu: always dark by design, in both themes */}
+            <SheetContent
+              side="top"
+              showCloseButton={false}
+              className="h-dvh gap-0 border-0 bg-[oklch(0.14_0.012_50)] p-6 text-white"
+            >
+              <SheetHeader className="flex-row items-center justify-between px-0 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <img src={site.logo} alt="" className="size-10 rounded-full object-cover" />
+                  <SheetTitle className="font-display text-xl text-white">Rtx Dev</SheetTitle>
+                </div>
+                <SheetDescription className="sr-only">Site navigation</SheetDescription>
+                <SheetClose
+                  render={
+                    <button
+                      type="button"
+                      aria-label="Close menu"
+                      className="flex size-11 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-primary"
+                    />
+                  }
+                >
+                  <X className="size-5" aria-hidden="true" />
+                </SheetClose>
               </SheetHeader>
-              <nav aria-label="Mobile navigation" className="flex flex-col">
-                {SECTION_LINKS.map((link) => (
-                  <a
+              <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center gap-1">
+                {SECTION_LINKS.map((link, index) => (
+                  <motion.a
                     key={link.href}
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="cursor-pointer border-b border-border py-4 text-base font-medium text-foreground transition-colors hover:text-primary"
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: 0.05 + index * 0.05, ease: "easeOut" }}
+                    className="group flex cursor-pointer items-baseline gap-4 border-b border-white/10 py-4 font-display text-3xl font-bold text-white transition-colors hover:text-primary"
                   >
+                    <span className="font-mono text-xs font-normal text-white/40">
+                      0{index + 1}
+                    </span>
                     {link.label}
-                  </a>
+                    <ArrowUpRight className="ml-auto size-5 self-center text-white/30 transition-colors group-hover:text-primary" aria-hidden="true" />
+                  </motion.a>
                 ))}
-                <a
-                  href="#pricing"
-                  onClick={() => setMenuOpen(false)}
-                  className="mt-6 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  Get a Website <ArrowUpRight aria-hidden="true" className="size-4" />
-                </a>
               </nav>
+              <a
+                href="#contact"
+                onClick={() => setMenuOpen(false)}
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-5 py-4 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                Get a Website <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
             </SheetContent>
           </Sheet>
         </div>

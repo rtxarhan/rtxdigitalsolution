@@ -1,3 +1,5 @@
+import { motion } from "motion/react";
+import { Plus } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -43,22 +45,32 @@ export default function Faq() {
   return (
     <section id="faq" className="px-5 py-20 md:px-8 md:py-28">
       <div className="mx-auto max-w-3xl">
-        <SectionHeading
-          eyebrow="05 — FAQ"
-          title="Questions?"
-          highlight="Answered."
-        />
+        <SectionHeading eyebrow="05 — FAQ" title="Questions?" highlight="Answered." />
 
-        <Accordion className="mt-12" multiple>
+        <Accordion className="gap-3 pt-12">
           {QUESTIONS.map((item, index) => (
-            <AccordionItem key={item.question} value={`question-${index}`}>
-              <AccordionTrigger className="cursor-pointer py-5 text-base font-medium hover:no-underline md:text-lg">
-                {item.question}
-              </AccordionTrigger>
-              <AccordionContent className="max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-                {item.answer}
-              </AccordionContent>
-            </AccordionItem>
+            <motion.div
+              key={item.question}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
+            >
+              <AccordionItem
+                value={`question-${index}`}
+                className="rounded-2xl border border-border bg-card px-5 shadow-sm transition-colors not-last:border-b data-open:border-primary/40 md:px-6"
+              >
+                <AccordionTrigger className="cursor-pointer items-center gap-4 py-5 text-base font-semibold hover:no-underline md:text-lg **:data-[slot=accordion-trigger-icon]:hidden">
+                  <span>{item.question}</span>
+                  <span className="ml-auto flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-primary transition-transform duration-300 group-aria-expanded/accordion-trigger:rotate-45 group-aria-expanded/accordion-trigger:bg-primary group-aria-expanded/accordion-trigger:text-primary-foreground">
+                    <Plus className="size-4" aria-hidden="true" />
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pr-12 text-sm leading-relaxed text-muted-foreground md:text-base">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            </motion.div>
           ))}
         </Accordion>
       </div>
