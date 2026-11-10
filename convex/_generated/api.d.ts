@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as admin from "../admin.js";
+import type * as leads from "../leads.js";
 import type * as users from "../users.js";
 
 import type {
@@ -17,11 +19,18 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
+  leads: typeof leads;
   users: typeof users;
 }>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
  */
 export declare const api: FilterApi<
   typeof fullApi,
@@ -30,6 +39,11 @@ export declare const api: FilterApi<
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = internal.myModule.myFunction;
+ * ```
  */
 export declare const internal: FilterApi<
   typeof fullApi,
