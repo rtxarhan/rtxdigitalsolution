@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo skip-install",
+  "buildCommand": "mkdir -p vercel-out && echo ok > vercel-out/.keep",
+  "outputDirectory": "vercel-out",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://rtxdigitalsolution.onhercules.app/$1"
+    }
+  ]
+}
