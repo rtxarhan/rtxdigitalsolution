@@ -5,6 +5,7 @@ import WhatsappFloat from "@/components/whatsapp-float.tsx";
 import { site } from "@/lib/site.ts";
 import IntroLoader from "./-components/intro-loader.tsx";
 import Hero from "./-components/hero.tsx";
+import ScrollStory from "./-components/scroll-story.tsx";
 import Services from "./-components/services.tsx";
 import Work from "./-components/work.tsx";
 import Process from "./-components/process.tsx";
@@ -32,6 +33,7 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <ScrollStory />
         <Services />
         <Work />
         <Process />

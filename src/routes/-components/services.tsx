@@ -64,10 +64,10 @@ export default function Services() {
             return (
               <motion.article
                 key={service.title}
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 40, rotate: index % 2 === 0 ? -2 : 2 }}
+                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: (index % 3) * 0.08, ease: "easeOut" }}
                 whileHover={{ y: -6 }}
                 className="group rounded-2xl border border-border bg-card p-6 shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/50 hover:shadow-[0_16px_44px_-20px] hover:shadow-primary/35 sm:p-7"
               >

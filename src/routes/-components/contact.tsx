@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -15,7 +16,6 @@ import {
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { CONTACT, site, whatsappLink } from "@/lib/site.ts";
 import { PLANS } from "@/lib/plans.ts";
-import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Please enter your name."),
@@ -150,14 +150,14 @@ export default function Contact() {
                 href={whatsappLink("Hi Rtx Dev, I want to talk about a website.")}
                 target="_blank"
                 rel="noreferrer"
-                className="flex w-fit items-center gap-3 text-background/80 transition-colors hover:text-primary"
+                className="flex w-fit cursor-pointer items-center gap-3 text-background/80 transition-colors hover:text-primary"
               >
                 <MessageCircle className="size-4 text-primary" aria-hidden="true" />
                 <span>WhatsApp</span>
               </a>
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="flex w-fit items-center gap-3 text-background/80 transition-colors hover:text-primary"
+                className="flex w-fit cursor-pointer items-center gap-3 text-background/80 transition-colors hover:text-primary"
               >
                 <Mail className="size-4 text-primary" aria-hidden="true" />
                 <span>{CONTACT.email}</span>
@@ -254,7 +254,7 @@ export default function Contact() {
                 {errors.message && <p className="text-xs text-destructive">{errors.message.message}</p>}
               </div>
             </div>
-            <Button type="submit" size="lg" className="mt-5 w-full gap-2">
+            <Button type="submit" size="lg" className="mt-5 w-full cursor-pointer gap-2">
               Start a WhatsApp chat
               <Send className="size-4" aria-hidden="true" />
             </Button>

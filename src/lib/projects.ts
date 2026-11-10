@@ -45,3 +45,6 @@ export const PROJECTS: Project[] = [
     liveUrl: "",
   },
 ];
+
+/** Live video used inside the scroll-story browser mockup (replaces the old static picture). */
+export const STORY_VIDEO = PROJECTS[1];

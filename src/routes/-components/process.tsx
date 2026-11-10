@@ -31,8 +31,7 @@ export default function Process() {
     target: sectionRef,
     offset: ["start 0.8", "end 0.65"],
   });
-  const verticalScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const horizontalScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <section
@@ -51,11 +50,11 @@ export default function Process() {
           <div className="absolute bottom-8 left-[1.15rem] top-8 w-px bg-border md:bottom-auto md:left-[12.5%] md:right-[12.5%] md:top-6 md:h-px md:w-auto">
             <motion.div
               className="h-full w-full origin-top bg-primary md:hidden"
-              style={{ scaleY: verticalScale }}
+              style={{ scaleY: lineScale }}
             />
             <motion.div
               className="hidden h-full w-full origin-left bg-primary md:block"
-              style={{ scaleX: horizontalScale }}
+              style={{ scaleX: lineScale }}
             />
           </div>
 

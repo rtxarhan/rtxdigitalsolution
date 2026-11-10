@@ -77,14 +77,14 @@ export default function Pricing() {
           {PLANS.map((plan, index) => (
             <motion.article
               key={plan.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               whileHover={{ y: -6 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.45, delay: index * 0.07, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: (index % 3) * 0.08, ease: "easeOut" }}
               className={`relative flex h-full flex-col rounded-2xl border bg-card p-6 shadow-sm transition-shadow hover:shadow-lg sm:p-7 ${
                 plan.popular
-                  ? "border-primary/40 bg-primary/5 ring-2 ring-primary lg:scale-[1.02]"
+                  ? "border-primary/40 bg-primary/5 ring-2 ring-primary"
                   : "border-border"
               }`}
             >
@@ -203,8 +203,8 @@ export default function Pricing() {
             <h3 className="pt-3 font-display text-2xl font-bold">How payment works</h3>
             <div className="relative pt-6">
               <motion.div
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.9, delay: 0.2, ease: "easeInOut" }}
                 className="absolute left-4 top-8 h-[calc(100%-4rem)] w-px origin-top bg-primary/35 md:hidden"

@@ -1,12 +1,20 @@
 import { useEffect, useRef } from "react";
-import { animate, motion, useInView, useMotionValue, useTransform } from "motion/react";
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import { ArrowDownRight, ArrowUpRight, Check, Globe2, Smartphone } from "lucide-react";
 
 import { Button } from "@/components/ui/button.tsx";
-import { site } from "@/lib/site.ts";
+import { PROJECTS } from "@/lib/projects.ts";
 
 const FLOATING_Y: number[] = [0, -10, 0];
 const MARQUEE_X: string[] = ["0%", "-50%"];
+const HERO_VIDEO = PROJECTS[0];
 const CAPABILITIES = [
   "LANDING PAGES",
   "E-COMMERCE",
@@ -43,7 +51,7 @@ function StatsStrip() {
   return (
     <div className="mx-auto grid max-w-6xl grid-cols-2 overflow-hidden rounded-3xl border border-border bg-card shadow-xl shadow-foreground/[0.04] md:grid-cols-4">
       {STATS.map((stat, index) => (
-        <div key={stat.label} className={`px-5 py-6 sm:px-7 sm:py-8 ${index % 2 === 1 ? "border-l border-border" : ""} ${index > 1 ? "md:border-l" : ""} ${index > 1 ? "border-border" : ""} ${index >= 2 ? "border-t md:border-t-0" : ""}`}>
+        <div key={stat.label} className={`px-5 py-6 sm:px-7 sm:py-8 ${index % 2 === 1 ? "border-l border-border" : ""} ${index > 1 ? "md:border-l" : ""} ${index >= 2 ? "border-t md:border-t-0" : ""}`}>
           <p className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             <StatCount value={stat.value} suffix={stat.suffix} />
           </p>
@@ -76,14 +84,22 @@ function MarqueeBand() {
   );
 }
 
+/** Browser mockup that now plays a live looping video instead of a static picture. */
 function BrowserPreview() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  // Tilt back and drift as the hero scrolls away.
+  const rotateX = useTransform(scrollYProgress, [0, 1], [0, 18]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
   return (
-    <div className="relative mx-auto w-full max-w-[34rem] px-3 pb-10 pt-4 sm:px-8 sm:pb-12 sm:pt-8">
-      <div className="absolute -right-2 top-6 size-64 rounded-full bg-[radial-gradient(circle, color-mix(in_oklch,var(--primary)_20%,transparent), transparent_68%)] blur-2xl sm:-right-4 sm:top-4 sm:size-80" />
+    <div ref={ref} className="relative mx-auto w-full max-w-[34rem] px-3 pb-10 pt-4 [perspective:1200px] sm:px-8 sm:pb-12 sm:pt-8">
+      <div className="absolute -right-2 top-6 size-64 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--primary)_20%,transparent),transparent_68%)] blur-2xl sm:-right-4 sm:top-4 sm:size-80" />
       <motion.div
         initial={{ y: 16, rotate: 1.5 }}
         animate={{ y: 0, rotate: 0 }}
         transition={{ duration: 0.65, ease: "easeOut" }}
+        style={{ rotateX, translateY: y }}
         className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-foreground/10 sm:rounded-[1.6rem]"
       >
         <div className="flex items-center gap-3 border-b border-border bg-muted/55 px-3 py-3 sm:px-4">
@@ -96,27 +112,36 @@ function BrowserPreview() {
             <Globe2 aria-hidden="true" className="mr-1.5 size-3" /> yourbusiness.in
           </div>
         </div>
-        <div className="relative min-h-[20rem] overflow-hidden bg-background p-5 sm:min-h-[25rem] sm:p-8">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_15%,color-mix(in_oklch,var(--primary)_12%,transparent),transparent_48%)]" />
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Globe2 aria-hidden="true" className="size-4" /></span>
-              <span className="font-display text-xs font-bold text-foreground sm:text-sm">goodday studio</span>
+        <div className="relative aspect-[4/5] overflow-hidden bg-muted sm:aspect-[5/6]">
+          <video
+            src={HERO_VIDEO.video}
+            poster={HERO_VIDEO.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={`${HERO_VIDEO.name} live preview`}
+            className="size-full object-cover"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/10" />
+          <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur">
+            <span className="relative flex size-2">
+              <motion.span
+                className="absolute inline-flex size-full rounded-full bg-red-500"
+                animate={{ scale: [1, 1.9, 1] as const, opacity: [0.7, 0, 0.7] as const }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
+              />
+              <span className="relative inline-flex size-2 rounded-full bg-red-500" />
+            </span>
+            Live
+          </span>
+          <div className="absolute inset-x-5 bottom-5 sm:inset-x-7 sm:bottom-7">
+            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-white/80 sm:text-[10px]">Made for your next chapter</p>
+            <p className="mt-2 font-display text-3xl font-bold leading-[0.98] tracking-tight text-white sm:text-5xl">Make your<br />next move.</p>
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[10px] font-semibold text-black">
+              Book a table <ArrowUpRight aria-hidden="true" className="size-3" />
             </div>
-            <div className="flex gap-2 text-[8px] font-medium text-muted-foreground sm:gap-4 sm:text-[10px]">
-              <span>Work</span><span>About</span><span>Contact</span>
-            </div>
-          </div>
-          <div className="relative mt-8 sm:mt-12">
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-primary sm:text-[10px]">Made for your next chapter</p>
-            <h2 className="mt-3 max-w-xs font-display text-3xl font-bold leading-[0.98] tracking-tight text-foreground sm:text-5xl">Make your<br />next move.</h2>
-            <p className="mt-3 max-w-[14rem] text-[10px] leading-5 text-muted-foreground sm:mt-4 sm:text-xs">A little more you. A lot more possibility. Let’s make something good.</p>
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-[9px] font-semibold text-background sm:mt-6 sm:text-[10px]">Discover the studio <ArrowUpRight aria-hidden="true" className="size-3" /></div>
-          </div>
-          <div className="relative mt-8 grid grid-cols-3 gap-2 sm:mt-10 sm:gap-3">
-            <div className="h-20 rounded-xl bg-primary/90 sm:h-28" />
-            <div className="h-20 rounded-xl bg-secondary sm:h-28"><div className="mx-auto mt-4 size-9 rounded-full border-[5px] border-primary/70 sm:mt-6 sm:size-12" /></div>
-            <div className="h-20 rounded-xl bg-muted sm:h-28"><div className="ml-3 mt-3 h-2 w-8 rounded-full bg-foreground/10 sm:ml-4 sm:mt-5 sm:w-12" /><div className="ml-3 mt-2 h-2 w-12 rounded-full bg-foreground/10 sm:ml-4 sm:w-16" /></div>
           </div>
         </div>
       </motion.div>
@@ -124,7 +149,7 @@ function BrowserPreview() {
       <motion.div
         animate={{ y: FLOATING_Y }}
         transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
-        className="absolute -left-1 bottom-2 z-10 flex items-center gap-2.5 rounded-2xl border border-border bg-card px-3 py-2.5 shadow-xl shadow-foreground/10 sm:-left-1 sm:bottom-0 sm:px-4 sm:py-3"
+        className="absolute -left-1 bottom-2 z-10 flex items-center gap-2.5 rounded-2xl border border-border bg-card px-3 py-2.5 shadow-xl shadow-foreground/10 sm:bottom-0 sm:px-4 sm:py-3"
       >
         <span className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary"><Check aria-hidden="true" className="size-4" /></span>
         <span><span className="block text-xs font-bold text-foreground">Ready in 2–3 days</span><span className="mt-0.5 block text-[10px] text-muted-foreground">Quick, without the rush</span></span>
@@ -137,15 +162,6 @@ function BrowserPreview() {
         <span className="flex size-8 items-center justify-center rounded-xl bg-secondary text-foreground"><Smartphone aria-hidden="true" className="size-4" /></span>
         <span className="text-xs font-bold text-foreground">Fast & responsive</span>
       </motion.div>
-      <motion.div
-        animate={{ y: FLOATING_Y }}
-        transition={{ duration: 4.3, delay: 0.7, ease: "easeInOut", repeat: Infinity }}
-        className="absolute bottom-16 right-1 z-10 hidden items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3 shadow-xl shadow-foreground/10 sm:flex"
-      >
-        <span className="font-mono text-sm font-bold text-primary">50%</span>
-        <span className="text-xs font-semibold text-foreground">advance only</span>
-      </motion.div>
-      <img src={site.logo} alt="Rtx Dev" className="absolute bottom-0 right-5 z-10 size-11 rounded-full border-2 border-card object-cover shadow-lg sm:right-10 sm:size-14" />
     </div>
   );
 }
@@ -166,7 +182,7 @@ export default function Hero() {
             <span className="text-xs font-semibold text-foreground sm:text-sm">Available for new projects</span>
           </div>
 
-          <h1 className="mt-6 max-w-2xl font-display text-[clamp(3.1rem,8vw,6.4rem)] font-bold leading-[0.98] tracking-[-0.035em] text-foreground">
+          <h1 className="mt-6 max-w-2xl font-display text-[clamp(3.1rem,8vw,6.4rem)] font-bold leading-[0.98] tracking-[-0.035em] text-balance text-foreground">
             I build websites that <span className="bg-gradient-to-r from-primary to-primary/65 bg-clip-text text-transparent">grow</span> your business.
           </h1>
           <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
@@ -174,10 +190,10 @@ export default function Hero() {
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
-            <Button render={<a href="#pricing" />} nativeButton={false} className="h-12 cursor-pointer rounded-full px-6 text-sm font-semibold shadow-lg shadow-primary/20 sm:h-13 sm:px-7">
+            <Button render={<a href="#pricing" />} nativeButton={false} className="h-12 cursor-pointer rounded-full px-6 text-sm font-semibold shadow-lg shadow-primary/20 sm:px-7">
               Get a Website <ArrowUpRight aria-hidden="true" />
             </Button>
-            <Button render={<a href="#work" />} nativeButton={false} variant="secondary" className="h-12 cursor-pointer rounded-full px-6 text-sm font-semibold sm:h-13 sm:px-7">
+            <Button render={<a href="#work" />} nativeButton={false} variant="secondary" className="h-12 cursor-pointer rounded-full px-6 text-sm font-semibold sm:px-7">
               View Work <ArrowDownRight aria-hidden="true" />
             </Button>
           </div>
