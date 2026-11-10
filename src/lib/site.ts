@@ -12,7 +12,10 @@ export const site: Site = {
   tagline:
     "Rtx Dev builds fast, modern websites and web apps for businesses. Plans from ₹12,000 with ₹800/month care.",
   logo: "https://hercules-cdn.com/file_t35F0h2A4nJX4Bzn01bI0S5m",
-  nav: [{ label: "Home", to: "/" }],
+  nav: [
+    { label: "Home", to: "/" },
+    { label: "Admin", to: "/developer" },
+  ],
 };
 
 /** Placeholder contact details: replace with the owner's real number and email. */

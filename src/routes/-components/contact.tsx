@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "convex/react";
+import { ConvexError } from "convex/values";
 import { motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { api } from "@/convex/_generated/api.js";
 import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
@@ -13,13 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
+import { Spinner } from "@/components/ui/spinner.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { CONTACT, site, whatsappLink } from "@/lib/site.ts";
 import { PLANS } from "@/lib/plans.ts";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Please enter your name."),
-  phone: z.string().trim().min(7, "Please enter a valid phone number."),
+  phone: z.string().trim().min(7, "Please enter a valid phone number.").max(20),
   businessType: z.string().trim().min(2, "Please tell me what your business does."),
   planId: z.string().min(1, "Please choose a plan."),
   message: z.string().trim().min(8, "Please add a little detail about your project."),
@@ -30,10 +36,13 @@ type ContactFormValues = z.infer<typeof contactSchema>;
 const PLAN_ITEMS = Object.fromEntries(PLANS.map((plan) => [plan.id, plan.name]));
 
 export default function Contact() {
+  const submitLead = useMutation(api.leads.submit);
+  const [sending, setSending] = useState(false);
   const {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
@@ -46,7 +55,7 @@ export default function Contact() {
     },
   });
 
-  const onSubmit = (values: ContactFormValues) => {
+  const onSubmit = async (values: ContactFormValues) => {
     const selectedPlan = PLANS.find((plan) => plan.id === values.planId);
     const details = [
       "Hi Rtx Dev, I’d like to discuss a website.",
@@ -56,7 +65,26 @@ export default function Contact() {
       `Plan: ${selectedPlan?.name ?? values.planId}`,
       `Project details: ${values.message}`,
     ].join("\n");
+    // Open WhatsApp right away (inside the click) so mobile browsers don't block it.
     window.open(whatsappLink(details), "_blank", "noopener,noreferrer");
+    setSending(true);
+    try {
+      await submitLead({
+        ...values,
+        planName: selectedPlan?.name ?? values.planId,
+        planPrice: selectedPlan?.price ?? 0,
+      });
+      toast.success("Thanks! Your enquiry has been sent.");
+      reset();
+    } catch (error) {
+      const message =
+        error instanceof ConvexError && typeof error.data?.message === "string"
+          ? error.data.message
+          : "Could not send your enquiry. Please try WhatsApp.";
+      toast.error(message);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -254,12 +282,13 @@ export default function Contact() {
                 {errors.message && <p className="text-xs text-destructive">{errors.message.message}</p>}
               </div>
             </div>
-            <Button type="submit" size="lg" className="mt-5 w-full cursor-pointer gap-2">
-              Start a WhatsApp chat
+            <Button type="submit" size="lg" disabled={sending} className="mt-5 w-full cursor-pointer gap-2">
+              {sending ? <Spinner /> : null}
+              Send & open WhatsApp
               <Send className="size-4" aria-hidden="true" />
             </Button>
             <p className="pt-3 text-center text-xs text-muted-foreground">
-              Your details open in WhatsApp — no account needed.
+              Your enquiry is saved and opens in WhatsApp — no account needed.
             </p>
           </form>
         </div>
